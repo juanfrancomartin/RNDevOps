@@ -9,6 +9,7 @@
 import React from 'react';
 import type {Node} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -25,6 +26,9 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+
+import Analytics from 'appcenter-analytics';
+import Crashes from 'appcenter-crashes';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -59,6 +63,14 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  function sendEvent() {
+    Analytics.trackEvent('My custom event', {prop1: 'customProp'});
+  }
+
+  function sendCrash() {
+    Crashes.generateTestCrash();
+  }
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -70,6 +82,8 @@ const App: () => Node = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          <Button title="Event" onPress={() => sendEvent()} />
+          <Button title="Crash" onPress={() => sendCrash()} />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.js</Text> to change this
             screen and then come back to see your edits.
